@@ -43,7 +43,6 @@ set_target_properties(test_func
 
 target_link_libraries(test_func
   ${Boost_LIBRARIES}
-  functions_lib 
 )
 
 install(TARGETS ip_filter RUNTIME DESTINATION bin)
