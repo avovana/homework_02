@@ -15,23 +15,21 @@ set(TEST_PATH "${PROJECT_SOURCE_DIR}/tests")
 
 find_package(Boost COMPONENTS unit_test_framework)
 
-add_executable(ip_filter ${SOURCE_PATH}/ipfilter.cpp)
-
-add_library(functions_lib ${SOURCE_PATH}/lib.cpp)
-add_library(filter_func ${SOURCE_PATH}/filter_func.cpp)
-target_link_libraries(ip_filter functions_lib filter_func)
+add_executable(ip_filter 
+	${SOURCE_PATH}/ipfilter.cpp
+	${SOURCE_PATH}/lib.h
+	${SOURCE_PATH}/filter_func.h
+	${SOURCE_PATH}/utils.h)
 
 add_executable(test_func ${TEST_PATH}/test_functions.cpp)
 
 set_target_properties(
   ip_filter
-  functions_lib
-  filter_func
   test_func
   PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
-    COMPILE_OPTIONS -W1 -Wall -Wextra
+    COMPILE_OPTIONS -Wpedantic -Wall -Wextra
 )
 
 set_target_properties(test_func

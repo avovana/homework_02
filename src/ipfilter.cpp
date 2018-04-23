@@ -8,8 +8,8 @@
 #include <functional>   // std::greater
 #include <algorithm>    // std::sort
 
-#include "lib.cpp"
-#include "filter_func.cpp"
+#include "lib.h"
+#include "filter_func.h"
 
 void print(const ip_adress& ip)
 {

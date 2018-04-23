@@ -1,7 +1,11 @@
+#pragma once
+
 #include <string>
 #include <vector>
 #include <tuple>
 #include <cstdlib>
+
+#include <utils.h>
 
 // ("",  '.') -> [""]
 // ("11", '.') -> ["11"]
@@ -27,8 +31,6 @@ std::vector<std::string> split(const std::string &str, char d)
 
 	return r;
 }
-
-using ip_adress = std::tuple<uint8_t, uint8_t, uint8_t, uint8_t>;
 
 ip_adress getIpAdress(const std::string &str, char d)
 {

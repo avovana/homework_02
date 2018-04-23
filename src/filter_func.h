@@ -1,8 +1,10 @@
+#pragma once
+
 #include <tuple>
 #include <vector>
 #include <cstdlib>
 
-using ip_adress = std::tuple<uint8_t, uint8_t, uint8_t, uint8_t>;
+#include <utils.h>
 
 enum class FILTER_MATCH { ANY_OF, IN_ORDER };
 
