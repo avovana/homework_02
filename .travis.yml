@@ -1,0 +1,20 @@
+dist: trusty
+sudo: required
+language: cpp
+compiler: clang
+
+before_script:
+  - sudo apt-get update -qq
+  - cd lesson2ipfilter
+script:
+  # Boost Test Framework 1.54
+  - sudo apt-get install -y -qq libboost-test1.54-dev
+  - cmake .
+  - cmake --build .
+  - cmake --build . --target test
+  - cmake --build . --target package
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+  - curl -T ipfilter-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -uavovana:$BINTRAY_API_KEY "https://api.bintray.com/content/avovana/tasks/2lesson_ip_filter/$TRAVIS_BUILD_NUMBER/ipfilter-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=trusty;deb_component=main;deb_architecture=amd64;publish=1"
