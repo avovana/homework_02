@@ -30,18 +30,6 @@ std::vector<std::string> split(const std::string &str, char d)
 
 using ip_adress = std::tuple<uint8_t, uint8_t, uint8_t, uint8_t>;
 
-/*
-bool operator == ( ip_adress &lhs, ip_adress &rhs )
-{
-    if((std::get<0>(lhs) == std::get<0>(rhs)) &&
-       (std::get<1>(lhs) == std::get<1>(rhs)) &&
-       (std::get<2>(lhs) == std::get<2>(rhs)) &&
-       (std::get<3>(lhs) == std::get<3>(rhs)))
-        return true;
-    else
-        return false;
-}*/
-
 ip_adress getIpAdress(const std::string &str, char d)
 {
 	std::vector<std::string> r;

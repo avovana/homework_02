@@ -11,19 +11,6 @@
 #include "lib.cpp"
 #include "filter_func.cpp"
 
-std::ostream& operator<<(std::ostream& os, const ip_adress& ip)
-{
-	os << static_cast<int>(std::get<0>(ip))
-		<< "."
-		<< static_cast<int>(std::get<1>(ip))
-		<< "."
-		<< static_cast<int>(std::get<2>(ip))
-		<< "."
-		<< static_cast<int>(std::get<3>(ip));
-
-	return os;
-}
-
 void print(const ip_adress& ip)
 {
   printf("%d.%d.%d.%d\n",
