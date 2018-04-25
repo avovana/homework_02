@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(test_filter_46_70)
 		std::make_tuple(1,2,0,1)
 	};  
 	
-	std::vector<ip_adress> filtered = ipFilter(ip_pool, FILTER_MATCH::IN_ORDER, 46, 70);
+	std::vector<ip_adress> filtered = ipFilter(ip_pool_input, FILTER_MATCH::IN_ORDER, 46, 70);
 	
 	std::vector<ip_adress> result = {
 		std::make_tuple(46,70,46,2), 
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(test_filter_46_70)
 	BOOST_REQUIRE( filtered != resultWrong);
 }
 
-BOOST_AUTO_TEST_CASE(test_filter_46_70)
+BOOST_AUTO_TEST_CASE(test_filter_any_46)
 {
 	std::vector<ip_adress> ip_pool_input = {
 		std::make_tuple(192,168,46,1), 
@@ -106,7 +106,7 @@ BOOST_AUTO_TEST_CASE(test_filter_46_70)
 		std::make_tuple(1,2,0,1)
 	};  
 	
-	std::vector<ip_adress> filtered = ipFilter(ip_pool, FILTER_MATCH::ANY_OF, 46);
+	std::vector<ip_adress> filtered = ipFilter(ip_pool_input, FILTER_MATCH::ANY_OF, 46);
 	
 	std::vector<ip_adress> result = {
 		std::make_tuple(46,168,0,1), 
