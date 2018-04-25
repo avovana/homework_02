@@ -58,3 +58,6 @@ include(CPack)
 
 enable_testing()
 add_test(test_input_processing test_func)
+add_test(test_filter_1 test_func)
+add_test(test_filter_46_70 test_func)
+add_test(test_filter_any_46 test_func)
