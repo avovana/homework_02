@@ -39,15 +39,14 @@ ip_adress getIpAdress(const std::string &str, char d)
 	std::string::size_type start = 0;
 	std::string::size_type stop = str.find_first_of(d);
 
-	for(int i = 0; stop != std::string::npos; ++i)
-		while (stop != std::string::npos)
-		{
-			r.push_back(str.substr(start, stop - start));
+	while (stop != std::string::npos)
+	{
+		r.push_back(str.substr(start, stop - start));
 	
-			start = stop + 1;
-			stop = str.find_first_of(d, start);
-		}
-		r.push_back(str.substr(start));
+		start = stop + 1;
+		stop = str.find_first_of(d, start);
+	}
+	r.push_back(str.substr(start));
 
 	if(r.size() != 4)
 		throw std::invalid_argument("wrong ip adress format!");

@@ -3,105 +3,45 @@
 #include <tuple>
 #include <vector>
 #include <cstdlib>
+#include <type_traits>
 
 #include "utils.h"
 
-enum class FILTER_MATCH { ANY_OF, IN_ORDER };
+namespace {
 
-namespace _detail_
-{
-    template<int index, typename Callback, typename... Args>
-    struct iterate_tuple 
+    template<int index, typename F, typename T>
+    bool check(const ip_adress& ip, F compare, T value)
     {
-        static void next(std::tuple<Args...>& t, Callback callback) 
-        {
-            iterate_tuple<index - 1, Callback, Args...>::next(t, callback);
-
-            callback(index, std::get<index>(t));
-        }
-    };
+        bool isCurrentEqual = std::get<index>(ip) == value ? true : false;
+        return isCurrentEqual;
+    }
     
-    template<typename Callback, typename... Args>
-    struct iterate_tuple<0, Callback, Args...> 
+    template<int index, typename F, typename T, typename... Args>
+    bool check(const ip_adress& ip, F compare, T value, Args... args)
     {
-        static void next(std::tuple<Args...>& t, Callback callback) 
-        {
-            callback(0, std::get<0>(t));
-        }
-    };
-
-    template<typename Callback, typename... Args>
-    struct iterate_tuple<-1, Callback, Args...>
-    {
-        static void next(std::tuple<Args...>& t, Callback callback)
-        {
-            // ничего не делаем
-        }
-    };
-}
-
-template<typename Callback, typename... Args>
-void for_each(std::tuple<Args...>& t, Callback callback) 
-{
-    int const t_size = std::tuple_size<std::tuple<Args...>>::value;
-    
-    _detail_::iterate_tuple<t_size - 1, Callback, Args...>::next(t, callback);
-}
-
-
-template<typename... Args>
-bool match(const ip_adress& ip, FILTER_MATCH filterParametr, Args... args)
-{
-   auto tuple_ = std::make_tuple(std::forward<Args>(args)...);
-
-   bool passedTest = true;
-
-   auto callback = [ip, &passedTest](int index, auto&& t)
-   {
-        switch(index)
-        {
-             case 0:  
-                 if(std::get<0>(ip) != t) passedTest = false;
-             break;
-             
-             case 1:  
-                 if(std::get<1>(ip) != t) passedTest = false;
-             break;
-             
-             case 2:  
-                 if(std::get<2>(ip) != t) passedTest = false;
-             break;
-             
-             case 3:  
-                 if(std::get<3>(ip) != t) passedTest = false;
-             break;
-             
-             default:
-             return;
-        }
-   };
-    
-   auto callback_any = [ip, &passedTest](int /*index*/, auto&& t)
-   {
-       bool test = false;
-       
-       if((t == std::get<0>(ip)) ||
-          (t == std::get<1>(ip)) ||
-          (t == std::get<2>(ip)) ||
-          (t == std::get<3>(ip)))
-           test = true;
+        bool isCurrentEqual = std::get<index>(ip) == value ? true : false;
         
-    passedTest = test;
-   };    
-
-   if(filterParametr == FILTER_MATCH::IN_ORDER)
-    for_each(tuple_, callback);
-   if(filterParametr == FILTER_MATCH::ANY_OF)
-    for_each(tuple_, callback_any);
+        const decltype(index) nextIndex = index + 1;
+        
+        return compare(isCurrentEqual, check<nextIndex>(ip, compare, args...));
+    }
     
-   return passedTest;
+    template<typename... Args>
+    auto match(const ip_adress& ip, FILTER_MATCH filterParametr, Args... args) -> typename std::enable_if<sizeof...(args) <= 4, bool>::type
+    {
+        bool match = false;
+    
+        auto matchInOrder = [](auto a, auto b) { return (a && b); };
+        auto matchAny = [](auto a, auto b) { return (a || b); };
+    
+        if(filterParametr == FILTER_MATCH::IN_ORDER)
+            match = check<0>(ip, matchInOrder, args...);
+        if(filterParametr == FILTER_MATCH::ANY_OF)
+            match = check<0>(ip, matchAny, args...);
+         
+        return match;
+    }
 }
-
 
 template<typename... Args>
 std::vector<ip_adress> ipFilter(const std::vector<ip_adress> &ip_pool, FILTER_MATCH filterParametr, Args... args)
@@ -110,9 +50,10 @@ std::vector<ip_adress> ipFilter(const std::vector<ip_adress> &ip_pool, FILTER_MA
     filteredPool.reserve(ip_pool.size());
         
     for(const auto& ip : ip_pool)
+    {
         if(match(ip, filterParametr, std::forward<Args>(args)...))
             filteredPool.push_back(ip);
+    }
     
     return filteredPool;
 }
-
