@@ -23,7 +23,8 @@ add_executable(ip_filter
 
 add_executable(test_func 
 	${TEST_PATH}/test_functions.cpp
-	${SOURCE_PATH}/lib.h)
+	${SOURCE_PATH}/lib.h
+	${SOURCE_PATH}/filter_func.h)
 
 set_target_properties(
   ip_filter
